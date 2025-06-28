@@ -118,7 +118,7 @@ with st.sidebar:
     linkedin_url = 'https://www.linkedin.com/in/pushkar-ambastha/'
     st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration:none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Pushkar Ambastha`</a>',unsafe_allow_html=True) 
 
-    current_price = st.number_input("Current Asset Price('$S_{t}$')", value = 100.0)
+    current_price = st.number_input("Current Asset Price($S_{t}$)", value = 100.0)
     strike = st.number_input("Strike Price (K)", value=100.0)
     time_to_maturity = st.number_input("Time to Maturity (t)(Years)", value=1.0)
     volatility = st.number_input("Volatility (σ)", value=0.2)
