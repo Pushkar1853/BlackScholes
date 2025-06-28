@@ -116,16 +116,16 @@ with st.sidebar:
     st.title("📈 $Black Scholes Model$")
     st.write("`Created by:`")
     linkedin_url = 'https://www.linkedin.com/in/pushkar-ambastha/'
-    st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration:none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Pushkar Ambastha`</a>',unsafe_allow_html=True) 
+    st.markdown(f"<a href="{linkedin_url}" target="_blank" style="text-decoration:none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Pushkar Ambastha`</a>",unsafe_allow_html=True) 
 
-    current_price = st.number_input("$ Current  Asset  Price $  ($S_{t}$)", value = 100.0)
-    strike = st.number_input("$ Strike  Price  (K)$", value=100.0)
+    current_price = st.number_input("<i> Current  Asset  Price </i>  ($S_{t}$)", value = 100.0)
+    strike = st.number_input(" Strike  Price  (K)", value=100.0)
     time_to_maturity = st.number_input("$Time  to  Maturity (t  in  Years)$", value=1.0)
     volatility = st.number_input("$Volatility  (σ)$", value=0.2)
     interest_rate = st.number_input("$Risk - Free   Interest  Rate  (r)$", value=0.05)
 
     st.markdown('----')
-    calculate_btn = st.button('$Heatmap  Parameters$')
+    calculate_btn = st.button('<i>Heatmap  Parameters</i>')
     spot_min = st.number_input('$Min  Spot  Price$', min_value=0.01, value=current_price*0.8, step=0.01)
     spot_max = st.number_input('$Max  Spot  Price$', min_value=0.01, value=current_price*1.2, step=0.01)
     vol_min = st.slider('$Min  Volatility  for  Heatmap$', min_value=0.01, max_value=1.0, value=volatility*0.5, step=0.01)
