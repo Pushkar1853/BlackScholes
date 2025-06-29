@@ -1,7 +1,9 @@
 streamlit
-pandas
 numpy
-scipy
-plotly
 matplotlib
 seaborn
+scipy
+plotly
+pandas
+mysql-connector-python
+python-dotenv
