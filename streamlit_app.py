@@ -86,7 +86,7 @@ with st.sidebar:
     </a>
     ''', unsafe_allow_html=True)
 
-    st.markdown("### \ud83d\udcca Load Real-Time Stock Price")
+    st.markdown("### Load Real-Time Stock Price")
     ticker_symbol = st.text_input("Enter Stock Ticker Symbol (e.g., AAPL, TSLA):", value="AAPL")
     use_real_price = st.checkbox("Use Real-Time Price", value=True)
 
