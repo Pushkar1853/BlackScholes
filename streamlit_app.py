@@ -77,7 +77,7 @@ class BlackScholes:
         return self.call_price, self.put_price
 
 with st.sidebar:
-    st.title("\ud83d\udcc8 Black Scholes Model")
+    st.title("Black Scholes Model")
     st.write('Created by:')
     st.markdown(f'''
     <a href="https://www.linkedin.com/in/pushkar-ambastha/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
