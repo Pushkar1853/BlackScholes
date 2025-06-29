@@ -86,6 +86,7 @@ with st.sidebar:
     </a>
     ''', unsafe_allow_html=True)
 
+    st.markdown("### \ud83d\udcca Load Real-Time Stock Price")
     ticker_symbol = st.text_input("Enter Stock Ticker Symbol (e.g., AAPL, TSLA):", value="AAPL")
     use_real_price = st.checkbox("Use Real-Time Price", value=True)
 
@@ -94,8 +95,8 @@ with st.sidebar:
         current_price_live = ticker.history(period="1d")['Close'].iloc[-1]
         if use_real_price:
             st.success(f"Latest price for {ticker_symbol}: ${current_price_live:.2f}")
-    except Exception:
-        st.warning("Failed to fetch data for the ticker. Using manual input.")
+    except Exception as e:
+        st.warning("Failed to fetch data for the ticker. Using default price.")
         current_price_live = 100.0
 
     current_price = st.number_input("Current Asset Price($S_{t}$)", value=float(current_price_live) if use_real_price else 100.0)
@@ -111,7 +112,6 @@ with st.sidebar:
     spot_max = st.number_input('Max Spot Price', min_value=0.01, value=current_price*1.2, step=0.01)
     vol_min = st.slider('Min Volatility for Heatmap', 0.01, 1.0, value=volatility*0.5, step=0.01)
     vol_max = st.slider('Max Volatility for Heatmap', 0.01, 1.0, value=volatility*1.5, step=0.01)
-
     spot_range = np.linspace(spot_min, spot_max, 10)
     vol_range = np.linspace(vol_min, vol_max, 10)
 
