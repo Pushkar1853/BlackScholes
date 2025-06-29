@@ -155,7 +155,7 @@ def plot_pricing_error_heatmap(time_to_maturity, interest_rate, strike, spot_ran
     # ax.set_xlabel("Spot Price")
     # ax.set_ylabel("Volatility")
     # return fig
-    plt.figure(figsize=(6, 5))
+    plt.figure(figsize=(4, 3))
     cmap = mcolors.LinearSegmentedColormap.from_list("error_map", ["red", "green"], N=100)
     sns.heatmap(pricing_errors, 
                 xticklabels=np.round(spot_range, 2), 
