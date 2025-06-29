@@ -126,8 +126,8 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_price_paid, p
             call_pnl[i, j] = temp_model.call_price - call_price_paid
             put_pnl[i, j] = temp_model.put_price - put_price_paid
 
-    cmap = mcolors.LinearSegmentedColormap.from_list("pnl_map", ["green", "white", "red"], N=100)
-
+    cmap = mcolors.LinearSegmentedColormap.from_list("pnl_map", ["red", "green"], N=100)
+    
     fig_call, ax_call = plt.subplots(figsize=(10, 8))
     sns.heatmap(call_pnl, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2),
                 annot=True, fmt=".2f", cmap=cmap, ax=ax_call)
