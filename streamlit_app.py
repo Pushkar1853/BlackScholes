@@ -7,8 +7,6 @@ from numpy import log, sqrt, exp
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
-from dotenv import load_dotenv
-from db.db_utils import save_simulation
 
 st.set_page_config(
     page_title="Black-Scholes Option Pricing Model",
@@ -189,7 +187,6 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_pric
     call_pnl = np.zeros((len(vol_range), len(spot_range)))
     put_pnl = np.zeros((len(vol_range), len(spot_range)))
 
-    all_outputs = []
     for i, vol in enumerate(vol_range):
         for j, spot in enumerate(spot_range):
             bs_temp = BlackScholes(
@@ -202,21 +199,8 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_pric
             bs_temp.calculate_prices()
             call_pnl[i,j] = bs_temp.call_price - call_purchase_price
             put_pnl[i,j] = bs_temp.put_price - put_purchase_price
-
-            all_outputs.append({
-                'vol': vol,
-                'spot': spot,
-                'call_price': bs_temp.call_price,
-                'is_call': 1,
-            })
-            all_outputs.append({
-                'vol': vol,
-                'spot': spot,
-                'put_price': bs_temp.put_price,
-                'is_call': 0,
-            })
     
-    cmap1 = mcolors.LinearSegmentedColormap.from_list("green_red", ["green", "red"], N=100)
+    cmap1 = mcolors.LinearSegmentedColormap.from_list("green_red", ["red", "green"], N=100)
     fig_call, ax_call = plt.subplots(figsize = (10,8))
     sns.heatmap(call_pnl, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2),
                 annot=True, fmt=".2f", cmap=cmap1, ax=ax_call)
@@ -230,7 +214,7 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_pric
     ax_put.set_xlabel('Spot Price')
     ax_put.set_ylabel('Volatility')
 
-    return fig_call, fig_put, all_outputs
+    return fig_call, fig_put
 
 st.title('Black Scholes Pricing Model')
 
@@ -275,6 +259,19 @@ st.markdown("")
 st.title("Options Price - Interactive Heatmap")
 st.info("Explore how option prices fluctuate with varying 'Spot Prices and Volatility' levels using interactive heatmap parameters, all while maintaining a constant 'Strike Price'.")
 
+# Interactive Sliders and Heatmaps for Call and Put Options
+# col1, col2 = st.columns([1,1], gap="small")
+
+# with col1:
+#     st.subheader('Call Price Heatmap')
+#     heatmap_fig_call, _ = plot_heatmap(bs_model, spot_range, vol_range, strike)
+#     st.pyplot(heatmap_fig_call)
+
+# with col2:
+#     st.subheader('Put Price Heatmap')
+#     _, heatmap_fig_put = plot_heatmap(bs_model, spot_range, vol_range, strike)
+#     st.pyplot(heatmap_fig_put)
+
 st.markdown("## Profit & Loss Heatmap")
 st.markdown("Visualize how your purchased CALL and PUT options perform under different market conditions.")
 
@@ -285,25 +282,10 @@ if generate_heatmap:
 
     with col1:
         st.subheader("CALL Option P&L Heatmap")
-        pnl_fig_call, _, _ = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
+        pnl_fig_call, _ = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
         st.pyplot(pnl_fig_call)
 
     with col2:
         st.subheader("PUT Option P&L Heatmap")
-        _, pnl_fig_put, _ = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
+        _, pnl_fig_put = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
         st.pyplot(pnl_fig_put)
-    
-    fig_call, fig_put, all_outputs = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
-
-    save_simulation(
-        inputs = {
-            'StockPrice': current_price,
-            'StrikePrice': strike,
-            'InterestRate': interest_rate,
-            'Volatility': volatility,
-            'TimeToExpiry': time_to_maturity,
-            'CallPurchasePrice': call_purchase_price,
-            'PutPurchasePrice': put_purchase_price
-        },
-        output_matrix= all_outputs
-    )
