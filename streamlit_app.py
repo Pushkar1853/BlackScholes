@@ -99,7 +99,7 @@ with st.sidebar:
         current_price_live = 100.0
 
     current_price = st.number_input("Current Asset Price($S_{t}$)", value=float(current_price_live) if use_real_price else 100.0)
-    strike = st.number_input("Strike Price (K)", value=100.0)
+    strike = st.number_input("Strike Price (K)", value=round(current_price * 0.95, 2))
     time_to_maturity = st.number_input("Time to Maturity (t)(Years)", value=1.0)
     volatility = st.number_input("Volatility (σ)", value=0.2)
     interest_rate = st.number_input("Risk-Free Interest Rate (r)", value=0.05)
