@@ -148,10 +148,10 @@ def plot_pricing_error_heatmap(time_to_maturity, interest_rate, strike, spot_ran
             model_call, _ = model.calculate_prices()
             pricing_errors[i, j] = model_call - market_call_price
 
-    fig, ax = plt.plot(figsize=(6, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     cmap = mcolors.LinearSegmentedColormap.from_list("error_map", ["red", "green"], N=100)
     sns.heatmap(pricing_errors, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap, ax=ax)
-    ax.set_title("Pricing Error Heatmap (Model - Market)")
+    ax.set_title("Pricing Error Heatmap (Model - Market)", fontsize=12, pad=20)
     ax.set_xlabel("Spot Price")
     ax.set_ylabel("Volatility")
     return fig
