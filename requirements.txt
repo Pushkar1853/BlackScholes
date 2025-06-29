@@ -7,3 +7,4 @@ plotly
 pandas
 mysql-connector-python
 python-dotenv
+yfinance
