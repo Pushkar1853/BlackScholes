@@ -148,27 +148,13 @@ def plot_pricing_error_heatmap(time_to_maturity, interest_rate, strike, spot_ran
             model_call, _ = model.calculate_prices()
             pricing_errors[i, j] = model_call - market_call_price
 
-    # fig, ax = plt.subplots(figsize=(10, 8))
-    # cmap = mcolors.LinearSegmentedColormap.from_list("error_map", ["red", "green"], N=100)
-    # sns.heatmap(pricing_errors, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap, ax=ax)
-    # ax.set_title("Pricing Error Heatmap (Model - Market)", fontsize=12, pad=20)
-    # ax.set_xlabel("Spot Price")
-    # ax.set_ylabel("Volatility")
-    # return fig
-    plt.figure(figsize=(4, 3))
+    fig, ax = plt.subplots(figsize=(10, 8))
     cmap = mcolors.LinearSegmentedColormap.from_list("error_map", ["red", "green"], N=100)
-    sns.heatmap(pricing_errors, 
-                xticklabels=np.round(spot_range, 2), 
-                yticklabels=np.round(vol_range, 2), 
-                annot=True, 
-                fmt=".2f", 
-                cmap=cmap,
-                cbar_kws={'label': 'Pricing Error'})
-    plt.title("Pricing Error Heatmap (Model - Market)")
-    plt.xlabel("Spot Price", fontsize=10)
-    plt.ylabel("Volatility", fontsize=10)
-    plt.tight_layout()
-    return plt.gcf()
+    sns.heatmap(pricing_errors, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap, ax=ax)
+    ax.set_title("Pricing Error Heatmap (Model - Market)")
+    ax.set_xlabel("Spot Price")
+    ax.set_ylabel("Volatility")
+    return fig
 
 def plot_greeks_surface(time_to_maturity, interest_rate, strike, spot_range, vol_range):
     delta_surface = np.zeros((len(vol_range), len(spot_range)))
