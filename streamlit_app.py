@@ -77,7 +77,7 @@ class BlackScholes:
         return self.call_price, self.put_price
 
 with st.sidebar:
-    st.title("Black Scholes Model")
+    st.title(" Black Scholes Model")
     st.write('Created by:')
     st.markdown(f'''
     <a href="https://www.linkedin.com/in/pushkar-ambastha/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
@@ -102,7 +102,7 @@ with st.sidebar:
     current_price = st.number_input("Current Asset Price($S_{t}$)", value=float(current_price_live) if use_real_price else 100.0)
     strike = st.number_input("Strike Price (K)", value=100.0)
     time_to_maturity = st.number_input("Time to Maturity (t)(Years)", value=1.0)
-    volatility = st.number_input("Volatility (\u03c3)", value=0.2)
+    volatility = st.number_input("Volatility (σ)", value=0.2)
     interest_rate = st.number_input("Risk-Free Interest Rate (r)", value=0.05)
     call_purchase_price = st.number_input("Purchase Price of CALL Option", value=5.0)
     put_purchase_price = st.number_input("Purchase Price of PUT Option", value=5.0)
