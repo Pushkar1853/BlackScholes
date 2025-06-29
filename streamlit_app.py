@@ -5,6 +5,7 @@ from scipy.stats import norm
 import plotly.graph_objects as go
 from numpy import log, sqrt, exp
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import seaborn as sns
 
 st.set_page_config(
@@ -80,6 +81,15 @@ class BlackScholes:
         current_price = self.current_price
         volatility = self.volatility
         interest_rate = self.interest_rate
+
+        if time_to_maturity<=0 or volatility<=0:
+            self.call_price = max(current_price-strike, 0)
+            self.put_price = max(strike- current_price, 0)
+            self.call_delta = 0
+            self.put_delta = 0
+            self.call_gamma = 0
+            self.put_gamma = 0
+            return self.call_price, self.put_price
 
         d1 = (
             log(current_price / strike) +
@@ -186,19 +196,20 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_pric
                 volatility=vol,
                 interest_rate=bs_model.interest_rate
             )
-            bs_model.calculate_prices()
+            bs_temp.calculate_prices()
             call_pnl[i,j] = bs_temp.call_price - call_purchase_price
             put_pnl[i,j] = bs_temp.put_price - put_purchase_price
     
+    cmap1 = mcolors.LinearSegmentedColormap.from_list("green_red", ["red", "green"], N=100)
     fig_call, ax_call = plt.subplots(figsize = (10,8))
     sns.heatmap(call_pnl, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2),
-                annot=True, fmt=".2f", cmap="RdYlGn", center=0, ax=ax_call)
+                annot=True, fmt=".2f", cmap=cmap1, ax=ax_call)
     ax_call.set_title('CALL P&L')
     ax_call.set_xlabel('Spot Price')
     ax_call.set_ylabel('Volatility')
 
     fig_put, ax_put = plt.subplots(figsize=(10,8))
-    sns.heatmap(put_pnl, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap='RdYlGn', center=0, ax=ax_put)
+    sns.heatmap(put_pnl, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap1, ax=ax_put)
     ax_put.set_title('PUT P&L')
     ax_put.set_xlabel('Spot Price')
     ax_put.set_ylabel('Volatility')
@@ -262,18 +273,19 @@ st.info("Explore how option prices fluctuate with varying 'Spot Prices and Volat
 #     st.pyplot(heatmap_fig_put)
 
 st.markdown("## Profit & Loss Heatmap")
-st.markdown("Visual how your purchased CALL and PUT options perform under different market conditions.")
+st.markdown("Visualize how your purchased CALL and PUT options perform under different market conditions.")
 
-col1, col2 = st.columns([1,1], gap='small')
+generate_heatmap = st.button("Generate P&L Heatmap")
 
-with col1:
-    st.subheader("CALL Option P&L Heatmap")
-    pnl_fig_call, _ = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
-    st.pyplot(pnl_fig_call)
+if generate_heatmap:
+    col1, col2 = st.columns([1,1], gap='small')
 
-with col2:
-    st.subheader("PUT Option P&L Heatmap")
-    _, pnl_fig_put = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
-    st.pyplot(pnl_fig_put)
-    
-    
+    with col1:
+        st.subheader("CALL Option P&L Heatmap")
+        pnl_fig_call, _ = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
+        st.pyplot(pnl_fig_call)
+
+    with col2:
+        st.subheader("PUT Option P&L Heatmap")
+        _, pnl_fig_put = plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_purchase_price, put_purchase_price)
+        st.pyplot(pnl_fig_put)
