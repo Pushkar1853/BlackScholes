@@ -36,6 +36,9 @@ Try it live: [https://blackscholemodel.streamlit.app/](https://blackscholemodel.
 ## How It Works
 
 The app uses the **Black-Scholes formula** to calculate:
+
+![image](https://miro.medium.com/v2/resize:fit:904/1*82ZaRKWa3gUCCdTrZGeUlQ.png)
+
 - Call and Put option prices
 - Option Greeks (Delta and Gamma, used internally)
 - Then computes **P&L** as:
@@ -62,7 +65,7 @@ pip install streamlit numpy pandas matplotlib seaborn scipy plotly
 ## File Structure
 
 ```
-📦blackscholes-pnl
+📦blackscholes
  ┣ 📄 streamlit_app.py       ← Main Streamlit app file
  ┣ 📄 README.md              ← This file
 ```
