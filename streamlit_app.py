@@ -185,5 +185,25 @@ if ticker_symbol:
         option_chain = ticker.option_chain()
         st.subheader("Sample Option Chain - Calls")
         st.dataframe(option_chain.calls[['strike', 'lastPrice', 'impliedVolatility']].head())
+
+        # Pricing error comparison
+        calls = option_chain.calls.copy()
+        calls['strike_diff'] = abs(calls['strike'] - strike)
+        closest_call = calls.sort_values(by='strike_diff').iloc[0]
+        market_price = closest_call['lastPrice']
+        market_iv = closest_call['impliedVolatility']
+        market_strike = closest_call['strike']
+
+        model_market_bs = BlackScholes(time_to_maturity, market_strike, current_price, market_iv, interest_rate)
+        model_market_call, _ = model_market_bs.calculate_prices()
+        pricing_error = model_market_call - market_price
+
+        st.subheader("Pricing Error vs Market")
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Market Strike", f"${market_strike:.2f}")
+        col2.metric("Market Call Price", f"${market_price:.2f}")
+        col3.metric("Model Call Price", f"${model_market_call:.2f}")
+        st.markdown(f"**Pricing Error**: ${pricing_error:.2f} (Model - Market)")
+
     except Exception:
         st.warning("Option chain data unavailable.")
