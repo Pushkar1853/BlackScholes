@@ -1,63 +1,74 @@
 # Black-Scholes Option Pricing & P&L Simulator
 
-This repository provides an interactive Black-Scholes Pricing Model dashboard built using Streamlit. It allows users to **simulate and visualize both the option prices and the resulting P&L (Profit and Loss)** under varying market conditions.
+This repository provides an interactive Black-Scholes Pricing Model dashboard built using Streamlit. It allows users to simulate and visualize both the option prices and the resulting P&L (Profit and Loss) under varying market conditions, using real-time market data from `yfinance`.
 
-Try it live: [https://blackscholemodel.streamlit.app/](https://blackscholemodel.streamlit.app/)
+**Live App**: [https://blackscholemodel.streamlit.app/](https://blackscholemodel.streamlit.app/)
 
 ---
 
 ## Features
 
-### Options Pricing & P&L Heatmaps
-- Visualizes **Call** and **Put** option prices using the **Black-Scholes formula**.
-- Interactive **P&L heatmaps** help you analyze your **profit/loss** based on the option **purchase price** under different market scenarios.
-- Color-coded heatmaps:
-  - 🟩 **Green** for profit
-  - 🟥 **Red** for loss
+### Options Pricing, P&L, and Risk Heatmaps
+- Computes **Call** and **Put** option prices using the Black-Scholes formula.
+- Visualizes **P&L heatmaps** across a grid of spot prices and volatilities.
+- Compares model prices to **real market option prices**, showing pricing errors as a heatmap.
+- Visualizes **option Greeks** (Delta and Gamma) as 2D surfaces.
+
+### Real-Time Market Data Integration
+- Pulls the latest price data and option chain from `yfinance`.
+- Allows users to simulate pricing using implied volatility and market strikes.
 
 ### Interactive Dashboard
-- Real-time updates to all Black-Scholes model inputs:
-  - Spot Price (S<sub>t</sub>)
-  - Volatility (σ)
+- Fully adjustable inputs:
+  - Spot Price (St)
   - Strike Price (K)
+  - Volatility (σ)
   - Time to Maturity (t)
-  - Risk-Free Interest Rate (r)
-  - Purchase Price of Call and Put options
-- Dynamic heatmap ranges for Spot Price and Volatility.
-- P&L heatmap generation is controlled via a button to avoid unnecessary recomputation.
-
-### Customizable Inputs
-- Define your own market assumptions.
-- Explore sensitivity to volatility and price swings.
-- Simulate edge cases like zero volatility or expired options.
+  - Risk-Free Rate (r)
+  - Option purchase price
+- Choose whether to use real-time data or manual inputs.
+- Dynamically update the spot/volatility ranges for grid-based simulations.
 
 ---
 
 ## How It Works
 
-The app uses the **Black-Scholes formula** to calculate:
+The app calculates:
 
-![image](https://miro.medium.com/v2/resize:fit:904/1*82ZaRKWa3gUCCdTrZGeUlQ.png)
-
-- Call and Put option prices
-- Option Greeks (Delta and Gamma, used internally)
-- Then computes **P&L** as:
+- Black-Scholes option prices
+- Option Greeks (Delta, Gamma)
+- P&L surface as:
   ```
-  P&L = Black-Scholes Price – Purchase Price
+  P&L = Model Option Price – Purchase Price
+  ```
+- Pricing Error as:
+  ```
+  Pricing Error = Model Price – Market Price
   ```
 
-The results are shown as a heatmap over a grid of:
-- Varying **spot prices**
-- Varying **volatilities**
+These are plotted over a configurable grid of:
+- Spot Prices (S)
+- Volatility (σ)
 
 ---
 
-## Dependencies
+## Preview
 
-Make sure to install the following Python packages:
+![Pricing Heatmap Example](https://miro.medium.com/v2/resize:fit:904/1*82ZaRKWa3gUCCdTrZGeUlQ.png)  
+*Black-Scholes theoretical pricing structure*
+
+---
+
+## Installation
 
 ```bash
-pip install streamlit numpy pandas matplotlib seaborn scipy plotly
+pip install streamlit numpy pandas matplotlib seaborn scipy plotly yfinance
+```
+
+Run the app with:
+
+```bash
+streamlit run streamlit_app.py
 ```
 
 ---
@@ -65,14 +76,17 @@ pip install streamlit numpy pandas matplotlib seaborn scipy plotly
 ## File Structure
 
 ```
-📦blackscholes
- ┣ 📄 streamlit_app.py       ← Main Streamlit app file
- ┣ 📄 README.md              ← This file
+📦 blackscholes/
+ ┣ 📄 streamlit_app.py       # Main Streamlit dashboard
+ ┣ 📄 README.md              # This file
 ```
+
+---
 
 ## Author
 
-[Pushkar Ambastha](https://www.linkedin.com/in/pushkar-ambastha/)  
-Feel free to fork, contribute, or star the repo if you find it useful!
+**Pushkar Ambastha**  
+[LinkedIn Profile](https://www.linkedin.com/in/pushkar-ambastha/)
 
 ---
+
