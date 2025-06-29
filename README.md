@@ -17,16 +17,16 @@ Try it live: [https://blackscholemodel.streamlit.app/](https://blackscholemodel.
 
 ### Interactive Dashboard
 - Real-time updates to all Black-Scholes model inputs:
-  - Spot Price
-  - Volatility
-  - Strike Price
-  - Time to Maturity
-  - Risk-Free Interest Rate
+  - Spot Price (S<sub>t</sub>)
+  - Volatility (σ)
+  - Strike Price (K)
+  - Time to Maturity (t)
+  - Risk-Free Interest Rate (r)
   - Purchase Price of Call and Put options
 - Dynamic heatmap ranges for Spot Price and Volatility.
 - P&L heatmap generation is controlled via a button to avoid unnecessary recomputation.
 
-### 🎯 Customizable Inputs
+### Customizable Inputs
 - Define your own market assumptions.
 - Explore sensitivity to volatility and price swings.
 - Simulate edge cases like zero volatility or expired options.
