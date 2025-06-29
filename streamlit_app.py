@@ -148,7 +148,7 @@ st.table(pd.DataFrame({
     'Current Asset Price': [current_price],
     'Strike Price': [strike],
     'Time to Maturity (Years)': [time_to_maturity],
-    'Volatility (\u03c3)': [volatility],
+    'Volatility (σ)': [volatility],
     'Risk-Free Interest Rate': [interest_rate]
 }))
 
