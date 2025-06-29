@@ -2,8 +2,7 @@
 
 This repository provides an interactive Black-Scholes Pricing Model dashboard built using Streamlit. It allows users to **simulate and visualize both the option prices and the resulting P&L (Profit and Loss)** under varying market conditions.
 
-Try it live:  
-Refer site: [https://blackscholemodel.streamlit.app/](https://blackscholemodel.streamlit.app/)
+Try it live: [https://blackscholemodel.streamlit.app/](https://blackscholemodel.streamlit.app/)
 
 ---
 
