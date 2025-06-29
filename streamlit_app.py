@@ -77,7 +77,7 @@ class BlackScholes:
         return self.call_price, self.put_price
 
 with st.sidebar:
-    st.title(" Black Scholes Model")
+    st.title("Black Scholes Model")
     st.write('Created by:')
     st.markdown(f'''
     <a href="https://www.linkedin.com/in/pushkar-ambastha/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
@@ -86,7 +86,6 @@ with st.sidebar:
     </a>
     ''', unsafe_allow_html=True)
 
-    st.markdown("### Load Real-Time Stock Price")
     ticker_symbol = st.text_input("Enter Stock Ticker Symbol (e.g., AAPL, TSLA):", value="AAPL")
     use_real_price = st.checkbox("Use Real-Time Price", value=True)
 
@@ -95,8 +94,8 @@ with st.sidebar:
         current_price_live = ticker.history(period="1d")['Close'].iloc[-1]
         if use_real_price:
             st.success(f"Latest price for {ticker_symbol}: ${current_price_live:.2f}")
-    except Exception as e:
-        st.warning("Failed to fetch data for the ticker. Using default price.")
+    except Exception:
+        st.warning("Failed to fetch data for the ticker. Using manual input.")
         current_price_live = 100.0
 
     current_price = st.number_input("Current Asset Price($S_{t}$)", value=float(current_price_live) if use_real_price else 100.0)
@@ -112,6 +111,7 @@ with st.sidebar:
     spot_max = st.number_input('Max Spot Price', min_value=0.01, value=current_price*1.2, step=0.01)
     vol_min = st.slider('Min Volatility for Heatmap', 0.01, 1.0, value=volatility*0.5, step=0.01)
     vol_max = st.slider('Max Volatility for Heatmap', 0.01, 1.0, value=volatility*1.5, step=0.01)
+
     spot_range = np.linspace(spot_min, spot_max, 10)
     vol_range = np.linspace(vol_min, vol_max, 10)
 
@@ -126,8 +126,8 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_price_paid, p
             call_pnl[i, j] = temp_model.call_price - call_price_paid
             put_pnl[i, j] = temp_model.put_price - put_price_paid
 
-    cmap = mcolors.LinearSegmentedColormap.from_list("pnl_map", ["red", "green"], N=100)
-    
+    cmap = mcolors.LinearSegmentedColormap.from_list("pnl_map", ['red', 'green'], N=100)
+
     fig_call, ax_call = plt.subplots(figsize=(10, 8))
     sns.heatmap(call_pnl, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2),
                 annot=True, fmt=".2f", cmap=cmap, ax=ax_call)
@@ -139,6 +139,46 @@ def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_price_paid, p
     ax_put.set_title("PUT P&L")
 
     return fig_call, fig_put
+
+def plot_pricing_error_heatmap(time_to_maturity, interest_rate, strike, spot_range, vol_range, market_call_price):
+    pricing_errors = np.zeros((len(vol_range), len(spot_range)))
+    for i, vol in enumerate(vol_range):
+        for j, spot in enumerate(spot_range):
+            model = BlackScholes(time_to_maturity, strike, spot, vol, interest_rate)
+            model_call, _ = model.calculate_prices()
+            pricing_errors[i, j] = model_call - market_call_price
+
+    fig, ax = plt.subplots(figsize=(10, 8))
+    cmap = mcolors.LinearSegmentedColormap.from_list("error_map", ["red", "green"], N=100)
+    sns.heatmap(pricing_errors, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap, ax=ax)
+    ax.set_title("Pricing Error Heatmap (Model - Market)")
+    ax.set_xlabel("Spot Price")
+    ax.set_ylabel("Volatility")
+    return fig
+
+def plot_greeks_surface(time_to_maturity, interest_rate, strike, spot_range, vol_range):
+    delta_surface = np.zeros((len(vol_range), len(spot_range)))
+    gamma_surface = np.zeros((len(vol_range), len(spot_range)))
+    for i, vol in enumerate(vol_range):
+        for j, spot in enumerate(spot_range):
+            model = BlackScholes(time_to_maturity, strike, spot, vol, interest_rate)
+            model.calculate_prices()
+            delta_surface[i, j] = model.call_delta
+            gamma_surface[i, j] = model.call_gamma
+
+    fig_delta, ax_delta = plt.subplots(figsize=(10, 8))
+    sns.heatmap(delta_surface, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap="YlGnBu", ax=ax_delta)
+    ax_delta.set_title("Call Delta Surface")
+    ax_delta.set_xlabel("Spot Price")
+    ax_delta.set_ylabel("Volatility")
+
+    fig_gamma, ax_gamma = plt.subplots(figsize=(10, 8))
+    sns.heatmap(gamma_surface, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".4f", cmap="PuBuGn", ax=ax_gamma)
+    ax_gamma.set_title("Call Gamma Surface")
+    ax_gamma.set_xlabel("Spot Price")
+    ax_gamma.set_ylabel("Volatility")
+
+    return fig_delta, fig_gamma
 
 st.title("Black-Scholes Pricing Model")
 bs_model = BlackScholes(time_to_maturity, strike, current_price, volatility, interest_rate)
@@ -204,6 +244,19 @@ if ticker_symbol:
         col2.metric("Market Call Price", f"${market_price:.2f}")
         col3.metric("Model Call Price", f"${model_market_call:.2f}")
         st.markdown(f"**Pricing Error**: ${pricing_error:.2f} (Model - Market)")
+    
+        if 'market_price' in locals():
+            st.subheader("Pricing Error Heatmap")
+            fig_error = plot_pricing_error_heatmap(time_to_maturity, interest_rate, market_strike, spot_range, vol_range, market_price)
+            st.pyplot(fig_error)
+
+            st.subheader("Delta / Gamma Surfaces")
+            fig_delta, fig_gamma = plot_greeks_surface(time_to_maturity, interest_rate, market_strike, spot_range, vol_range)
+            col1, col2 = st.columns(2)
+            with col1:
+                st.pyplot(fig_delta)
+            with col2:
+                st.pyplot(fig_gamma)
 
     except Exception:
         st.warning("Option chain data unavailable.")
