@@ -260,5 +260,5 @@ if ticker_symbol:
             with col2:
                 st.pyplot(fig_gamma)
 
-    except Exception:
-        st.warning("Option chain data unavailable.")
+    except Exception as e:
+        st.error(f"Option chain fetch failed: {e}")
