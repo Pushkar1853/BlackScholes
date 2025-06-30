@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
 import yfinance as yf
+import time
 
 st.set_page_config(
     page_title="Black-Scholes Option Pricing Model",
@@ -222,6 +223,7 @@ if st.button("Generate P&L Heatmap"):
 
 if ticker_symbol:
     try:
+        time.sleep(2)
         option_chain = ticker.option_chain()
         st.subheader("Sample Option Chain - Calls")
         st.dataframe(option_chain.calls[['strike', 'lastPrice', 'impliedVolatility']].head())
