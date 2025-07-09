@@ -115,11 +115,6 @@ with st.sidebar:
     spot_range = np.linspace(spot_min, spot_max, 10)
     vol_range = np.linspace(vol_min, vol_max, 10)
 
-# ... rest of the logic continues with your simulation and plotting functions
-# NOTE: Add toggles like st.checkbox() before plotting Greeks/Error surfaces
-# NOTE: Handle empty option chains using if option_chain.calls.empty:
-# NOTE: Compute and display % error next to price error
-
 def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_price_paid, put_price_paid):
     call_pnl = np.zeros((len(vol_range), len(spot_range)))
     put_pnl = np.zeros((len(vol_range), len(spot_range)))
