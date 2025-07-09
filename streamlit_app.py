@@ -12,7 +12,7 @@ import time
 
 st.set_page_config(
     page_title="Black-Scholes Option Pricing Model",
-    page_icon='s',
+    page_icon='📈',
     layout='wide',
     initial_sidebar_state='expanded'
 )
@@ -79,7 +79,6 @@ class BlackScholes:
 
 with st.sidebar:
     st.title("Black Scholes Model")
-    st.write('Created by:')
     st.markdown(f'''
     <a href="https://www.linkedin.com/in/pushkar-ambastha/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
         <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="20" height="20" />
@@ -115,6 +114,11 @@ with st.sidebar:
 
     spot_range = np.linspace(spot_min, spot_max, 10)
     vol_range = np.linspace(vol_min, vol_max, 10)
+
+# ... rest of the logic continues with your simulation and plotting functions
+# NOTE: Add toggles like st.checkbox() before plotting Greeks/Error surfaces
+# NOTE: Handle empty option chains using if option_chain.calls.empty:
+# NOTE: Compute and display % error next to price error
 
 def plot_pnl_heatmap(bs_model, spot_range, vol_range, strike, call_price_paid, put_price_paid):
     call_pnl = np.zeros((len(vol_range), len(spot_range)))
@@ -246,6 +250,9 @@ if ticker_symbol:
         col2.metric("Market Call Price", f"${market_price:.2f}")
         col3.metric("Model Call Price", f"${model_market_call:.2f}")
         st.markdown(f"**Pricing Error**: ${pricing_error:.2f} (Model - Market)")
+
+        error_pct = 100 * pricing_error / market_price
+        st.markdown(f"**Pricing Error %**: ({error_pct:+.1f}%)")
     
         if 'market_price' in locals():
             st.subheader("Pricing Error Heatmap")
